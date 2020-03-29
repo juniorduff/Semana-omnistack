@@ -1,21 +1,38 @@
 import React, { useState } from 'react';
 import logoImg from '../../assets/logo.svg';
 import './styles.css';
-import { Link } from 'react-router-dom'
+import { Link , useHistory} from 'react-router-dom'
 import { FiArrowLeft } from 'react-icons/fi';
-
+import api from '../../service/api';
 
 
 export default function Register() {
-  const [Name, setName] = useState('');
-  const [Email, setEmail] = useState('');
-  const [Watsapp, setWatsapp] = useState('');
-  const [City, setCity] = useState('');
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [whatsapp, setWatsapp] = useState('');
+  const [city, setCity] = useState('');
   const [uf, setUf] = useState('');
-  function handleRegister(e) {
 
+  const history = useHistory();
+  async function handleRegister(e) {
     e.preventDefault();
 
+    const data = {
+      name,
+      email,
+      whatsapp,
+      city,
+      uf,
+    };
+    try {
+      const res = await api.post('ongs', data)
+       alert(`Seu ID  de acesso ${res.data.id}`);
+       history.push('/');
+
+    } catch (error) {
+      alert('erro no cadastro tente novamente');
+
+    }
   }
   return (
 
@@ -34,20 +51,20 @@ export default function Register() {
         <form onSubmit={handleRegister}>
           <input
             placeholder="Nome da ONG"
-            value={Name}
+            value={name}
             onChange={e => setName(e.target.value)}
 
           />
           <input
             type="email"
             placeholder="E-mail"
-            value={Email}
+            value={email}
             onChange={e => setEmail(e.target.value)}
 
           />
           <input
             placeholder="WhatsApp"
-            value={Watsapp}
+            value={whatsapp}
             onChange={e => setWatsapp(e.target.value)}
 
           />
@@ -56,7 +73,7 @@ export default function Register() {
           <div className="input-group">
             <input
               placeholder="Cidade"
-              value={City}
+              value={city}
               onChange={e => setCity(e.target.value)}
             />
             <input
